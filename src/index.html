@@ -1,0 +1,58 @@
+<html>
+<body>
+<h1>管理画面</h1>
+<button id="refreshButton" type="button">IP更新</button>
+<p>IP指定</p>
+<select id="targetIP">
+</select>
+
+<p>メッセージ入力</p>
+<input id="inputText" type="text">
+<input id="sendButton" type="submit">
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const addtargetList = (ip) => {
+        let data = JSON.parse(ip);
+        for (let key in data) {
+            const sct = document.getElementById("targetIP");
+            const op = document.createElement('option');
+            op.value = "data[key]";
+            op.text = key;
+            sct.appendChild(op);
+        }
+    };
+
+    //send message
+    document.getElementById('sendButton').addEventListener('click', () => {
+
+        // inputに入力されたテキストを取得
+        let inputMessage = document.getElementById('inputText').value;
+
+        if (inputMessage === '') {
+            return;
+        }
+
+        ip = document.getElementById("targetIP").value;
+
+        // 'sendMessage' イベントを発火、メッセージを送信
+        socket.emit('sendMessage', ip,inputMessage);
+
+        // input 内のテキストを空にする
+        clearText();
+    });
+
+    //refresh ip
+    document.getElementById("refreshButton").addEventListener('click', () => {
+        socket.emit('RequestIPList');
+    });
+
+    socket.on("receiveIP", (ipJson) => {
+        const sct = document.getElementById("targetIP");
+        sct.innerText = "";
+        addtargetList(ipJson);
+    });
+</script>
+</body>
+</html>
