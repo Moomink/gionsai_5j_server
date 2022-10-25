@@ -26,7 +26,13 @@ server.listen(PORT,"0.0.0.0", () => {
 
 
 io.on('connection', socket => {
-    socket.on("sendMessage",(id,message,) =>{
+
+    socket.on("sendImage",(id,image) =>{
+        io.to(id).emit("image",image);
+        console.log("image [%s] send to %s.",image,id);
+    })
+
+    socket.on("sendMessage",(id,message) =>{
         io.to(id).emit("message",message);
         console.log("Message [%s] send to %s.",message,id);
     })

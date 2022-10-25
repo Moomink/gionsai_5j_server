@@ -1,60 +1,82 @@
 <html>
-<body>
-<h1>管理画面</h1>
-<button id="refreshButton" type="button">IP更新</button>
-<p>IP指定</p>
-<select id="targetIP">
-</select>
 
-<p>メッセージ入力</p>
-<textarea id="inputText" type="text">
-文字を入力
-</textarea>
-<input id="sendButton" type="submit">
-<script src="/socket.io/socket.io.js"></script>
-<script>
+<body>
+  <h1>管理画面</h1>
+  <button id="refreshButton" type="button">IP更新</button>
+  <p>IP指定</p>
+  <select id="targetIP">
+  </select>
+
+  <p>メッセージ入力</p>
+  <textarea id="inputText" type="text">
+
+  </textarea>
+  <input id="sendButton" type="submit">
+
+  <p> 画像送信</p>
+  <input type="file" id="imageFile" accept="image/*" />
+  <input id="sendImage" type="submit" />
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
     const socket = io();
 
     const addtargetList = (ip) => {
-        let data = JSON.parse(ip);
-        for (let key in data) {
-            const sct = document.getElementById("targetIP");
-            const op = document.createElement('option');
-            op.value = data[key];
-            op.text = key;
-            sct.appendChild(op);
-        }
+      let data = JSON.parse(ip);
+      for (let key in data) {
+        const sct = document.getElementById("targetIP");
+        const op = document.createElement('option');
+        op.value = data[key];
+        op.text = key;
+        sct.appendChild(op);
+      }
     };
+
+    //send image
+    // https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript
+    function encodeImageFileAsURL(element) {
+      const id = document.getElementById("targetIP").value;
+      var file = document.getElementById('imageFile').files[0];
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        socket.emit('sendImage', id, reader.result);
+        document.getElementById('imageFile').value = "";
+      }
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById('sendImage').addEventListener('click', encodeImageFileAsURL);
 
     //send message
     document.getElementById('sendButton').addEventListener('click', () => {
 
-        // inputに入力されたテキストを取得
-        let inputMessage = document.getElementById('inputText').value;
+      // inputに入力されたテキストを取得
+      let inputMessage = document.getElementById('inputText').value;
 
-        if (inputMessage === '') {
-            return;
-        }
+      if (inputMessage === '') {
+        return;
+      }
 
-        id = document.getElementById("targetIP").value;
+      id = document.getElementById("targetIP").value;
 
-        // 'sendMessage' イベントを発火、メッセージを送信
-        socket.emit('sendMessage', id,inputMessage);
+      // 'sendMessage' イベントを発火、メッセージを送信
+      socket.emit('sendMessage', id, inputMessage);
 
-        // input 内のテキストを空にする
-        document.getElementById('inputText').value = "";
+      // input 内のテキストを空にする
+      document.getElementById('inputText').value = "";
     });
 
     //refresh ip
     document.getElementById("refreshButton").addEventListener('click', () => {
-        socket.emit('RequestIPList');
+      socket.emit('RequestIPList');
     });
 
     socket.on("receiveIP", (ipJson) => {
-        const sct = document.getElementById("targetIP");
-        sct.innerText = "";
-        addtargetList(ipJson);
+      const sct = document.getElementById("targetIP");
+      sct.innerText = "";
+      addtargetList(ipJson);
     });
-</script>
+  </script>
 </body>
+
 </html>
