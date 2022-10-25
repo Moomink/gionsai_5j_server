@@ -7,7 +7,7 @@ const socketIo = require('socket.io');
 const app = express();
 const server = http.Server(app);
 
-const PORT = 3000;
+const PORT = 18526;
 
 const ipList = {};
 
@@ -26,9 +26,9 @@ server.listen(PORT,"0.0.0.0", () => {
 
 
 io.on('connection', socket => {
-    socket.on("sendMessage",(ip,message,) =>{
-        io.to(ipList[ip].emit("message",message));
-        console.log("Message [%s] send to %s.",message,ip);
+    socket.on("sendMessage",(id,message,) =>{
+        io.to(id).emit("message",message);
+        console.log("Message [%s] send to %s.",message,id);
     })
 
     socket.on("RequestIPList",messasge =>{

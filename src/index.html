@@ -7,7 +7,9 @@
 </select>
 
 <p>メッセージ入力</p>
-<input id="inputText" type="text">
+<textarea id="inputText" type="text">
+文字を入力
+</textarea>
 <input id="sendButton" type="submit">
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -18,7 +20,7 @@
         for (let key in data) {
             const sct = document.getElementById("targetIP");
             const op = document.createElement('option');
-            op.value = "data[key]";
+            op.value = data[key];
             op.text = key;
             sct.appendChild(op);
         }
@@ -34,13 +36,13 @@
             return;
         }
 
-        ip = document.getElementById("targetIP").value;
+        id = document.getElementById("targetIP").value;
 
         // 'sendMessage' イベントを発火、メッセージを送信
-        socket.emit('sendMessage', ip,inputMessage);
+        socket.emit('sendMessage', id,inputMessage);
 
         // input 内のテキストを空にする
-        clearText();
+        document.getElementById('inputText').value = "";
     });
 
     //refresh ip
