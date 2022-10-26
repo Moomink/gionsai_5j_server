@@ -2,24 +2,44 @@
 
 <body>
   <h1>管理画面</h1>
+
+  <!---
   <button id="refreshButton" type="button">IP更新</button>
   <p>IP指定</p>
   <select id="targetIP">
   </select>
-
-  <p>メッセージ入力</p>
+  --->
+  <h2>メッセージ入力</h2>
   <textarea id="inputText" type="text">
-
   </textarea>
   <input id="sendButton" type="submit">
 
-  <p> 画像送信</p>
+
+  <h2>画像送信</h2>
   <input type="file" id="imageFile" accept="image/*" />
   <input id="sendImage" type="submit" />
 
   <script src="/socket.io/socket.io.js"></script>
+
+
+  <h2>定型文送信</h2>
+  <div>
+    <label class="Template1" id="Template1">私、今手術っぽい所にいるけど今どこらへん？待ってるよ〜</label>
+    <input class="sendTemplate Template1" id="sendTemp1" type="submit" />
+
+  </div>
+
+  <div>
+    <label class="Template2" id="Template2">テンプレ2</label>
+    <input class="sendTemplate Template2" id="sendTemp2" type="submit" />
+  </div>
+
+
   <script>
     const socket = io();
+
+    //現状は未使用
+    const id ="";
 
     const addtargetList = (ip) => {
       let data = JSON.parse(ip);
@@ -32,10 +52,21 @@
       }
     };
 
+    //send Template
+    sendTemplateList = document.getElementsByClassName("sendTemplate");
+    for (let i = 0; i < sendTemplateList.length; i++) {
+      sendTemplateList[i].addEventListener('click', sendTemplate);
+    }
+    function sendTemplate(element) {
+      classes = element.srcElement.className.split(" ");
+      message = document.getElementById(classes[1]).innerHTML;
+      socket.emit('sendMessage',id, message);
+    }
+
     //send image
     // https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript
     function encodeImageFileAsURL(element) {
-      const id = document.getElementById("targetIP").value;
+      //const id = document.getElementById("targetIP").value;
       var file = document.getElementById('imageFile').files[0];
       var reader = new FileReader();
       reader.onloadend = function () {
@@ -67,9 +98,11 @@
     });
 
     //refresh ip
+    /*
     document.getElementById("refreshButton").addEventListener('click', () => {
       socket.emit('RequestIPList');
     });
+    */
 
     socket.on("receiveIP", (ipJson) => {
       const sct = document.getElementById("targetIP");
