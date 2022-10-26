@@ -36,6 +36,11 @@ io.on('connection', socket => {
     console.log("template [%s] send to %s.", body, id);
   })
 
+  socket.on("sendAction",(id,body)=>{
+    io.emit("action",body);
+    console.log("Action [%s] send.",body);
+  })
+
   socket.on("sendMessage", (id, message) => {
     io.emit("message", message);
     console.log("Message [%s] send to %s.", message, id);

@@ -10,8 +10,7 @@
   </select>
   --->
   <h2>メッセージ入力</h2>
-  <textarea id="inputText" type="text">
-  </textarea>
+  <textarea id="inputText" type="text"></textarea>
   <input id="sendButton" type="submit">
 
 
@@ -35,11 +34,15 @@
   </div>
 
 
+  <input class="sendAction" id="surprise" type="submit" value="驚かし" />
+  <input class="sendAction" id="clear" type="submit" value="初期化" />
+
+
   <script>
     const socket = io();
 
     //現状は未使用
-    const id ="";
+    const id = "";
 
     const addtargetList = (ip) => {
       let data = JSON.parse(ip);
@@ -60,7 +63,7 @@
     function sendTemplate(element) {
       classes = element.srcElement.className.split(" ");
       message = document.getElementById(classes[1]).innerHTML;
-      socket.emit('sendMessage',id, message);
+      socket.emit('sendMessage', id, message);
     }
 
     //send image
@@ -78,6 +81,16 @@
 
     document.getElementById('sendImage').addEventListener('click', encodeImageFileAsURL);
 
+    actionList = document.getElementsByClassName("sendAction")
+    for (let i = 0; i < actionList.length; i++) {
+      actionList[i].addEventListener('click', sendAction);
+    }
+
+    function sendAction(element) {
+      v = element.srcElement.id
+      socket.emit("sendAction", id, v)
+    }
+
     //send message
     document.getElementById('sendButton').addEventListener('click', () => {
 
@@ -88,7 +101,7 @@
         return;
       }
 
-      id = document.getElementById("targetIP").value;
+      //id = document.getElementById("targetIP").value;
 
       // 'sendMessage' イベントを発火、メッセージを送信
       socket.emit('sendMessage', id, inputMessage);
