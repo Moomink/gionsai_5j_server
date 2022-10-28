@@ -22,8 +22,8 @@
   <input class="sendChat point2" id="sendPoint2" type="submit" />
 
   <h3>3:手術室に入る前</h3>
-  子供に鍵を奪われた<br>
-  うでも
+  誰かいる？<br>
+  子供？なんか持ってる
   <input class="sendChat point3" id="sendPoint3" type="submit" />
 
   <h3>4:謎解きが終わり、手術室を出たあと</h3>
@@ -74,7 +74,7 @@
   <input class="sendAction" id="surprise" type="submit" value="驚かし" />
   <input class="sendAction" id="clear" type="submit" value="初期化" />
 
-  <input class="sendAction" id="kiosk" type="submit" value="kiosk" />
+  <input class="sendAction" id="kiosk" type="submit" value="KIOSKくん" />
 
 
   <script>
@@ -143,7 +143,7 @@
 
     // point3
     document.getElementById("sendPoint3").addEventListener('click', () => {
-      msg = "子供に鍵を奪われた\nうでも";
+      msg = "誰かいる？\n子供？なんか持ってる";
       socket.emit("sendMessage", id, msg);
     });
 
@@ -154,7 +154,6 @@
       sleep(4, () => {
         msg = "うしろ";
         socket.emit("sendMessage", id, msg);
-        socket.emit("sendAction");
       });
     });
 
