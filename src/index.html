@@ -14,32 +14,35 @@
   <h3>1:お化け屋敷に入る前</h3>
   迷ったどうしよ笑<br>
   なんか手術室みたいなところにいる
-  <input class="sendChat point1" id="sendPoint1" type="submit" />
+  <input class="sendChat point1 consoleButton" id="sendPoint1" type="submit" onclick="disabled = true;" />
 
   <h3>2:お化け屋敷に入った直後</h3>
   ドア開かない<br>
   待って閉じ込められた
-  <input class="sendChat point2" id="sendPoint2" type="submit" />
+  <input class="sendChat point2 consoleButton" id="sendPoint2" type="submit" onclick="disabled = true;" />
 
   <h3>3:手術室に入る前</h3>
   誰かいる？<br>
   子供？なんか持ってる
-  <input class="sendChat point3" id="sendPoint3" type="submit" />
+  <input class="sendChat point3 consoleButton" id="sendPoint3" type="submit" onclick="disabled = true;" />
 
   <h3>4:謎解きが終わり、手術室を出たあと</h3>
   (画面に1秒だけ画像出現)<br>
   うしろ
-  <input class="sendChat point4" id="sendPoint4" type="submit" />
+  <input class="sendChat point4 consoleButton" id="sendPoint4" type="submit" onclick="disabled = true;" />
 
   <h3>5:お化け屋敷から脱出したあと</h3>
   たすけて<br>
   (2秒後)どうしておいてくの<br>
   (1秒おき5回)いかないで
-  <input class="sendChat point5" id="sendPoint5" type="submit" />
+  <input class="sendChat point5 consoleButton" id="sendPoint5" type="submit" onclick="disabled = true;" />
 
-
-
-
+  <h3>その他機能</h3>
+  <div>
+    <input class="sendAction" id="clear" type="submit" value="初期化">
+    <input class="Action" id="enableButton" type="submit" value="ボタンロック解除" onclick="enableButton('consoleButton')">
+    <input class="sendAction" id="battery" type="submit" value="残量確認">
+  </div>
 
 
 
@@ -69,10 +72,9 @@
   </div>
 
 
-  <h2> その他機能</h2>
 
+  <h2> その他機能</h2>
   <input class="sendAction" id="surprise" type="submit" value="驚かし" />
-  <input class="sendAction" id="clear" type="submit" value="初期化" />
   <input class="sendAction" id="kiosk" type="submit" value="KIOSKくん" />
   <input class="sendAction" id="light" type="submit" value="ライト点灯" />
   <input class="sendAction" id="light_del" type="submit" value="ライト消滅" />
@@ -104,6 +106,13 @@
 
       var id = setTimeout(waitFunc, 1000);
 
+    }
+
+    function enableButton(className) {
+      elementList = document.getElementsByClassName(className);
+      for (let i = 0; i < elementList.length; i++) {
+        elementList[i].disabled = false;
+      }
     }
 
 
