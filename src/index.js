@@ -1,10 +1,12 @@
 const express = require('express');
 const http = require('http');
+const cors = require('cors')
 
 
 const socketIo = require('socket.io');
 
 const app = express();
+app.use(cors());
 const server = http.Server(app);
 
 const PORT = 18526;
