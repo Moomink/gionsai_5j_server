@@ -39,7 +39,7 @@
   <h3>5:お化け屋敷から脱出したあと</h3>
   たすけて<br>
   (2秒後)どうしておいてくの<br>
-  (1秒おき5回)いかないで
+  (1秒おき5回)たすけて
   <input class="sendChat point5 consoleButton" id="sendPoint5" type="submit" onclick="disabled = true;" />
 
   <h3>その他機能</h3>
@@ -195,7 +195,7 @@
 
         for (let i = 0; i < 5; i++) {
           sleep(i, () => {
-            msg = "いかないで";
+            msg = "たすけて";
             socket.emit("sendMessage", id, msg);
           })
         }
