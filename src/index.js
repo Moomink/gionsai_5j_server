@@ -44,7 +44,7 @@ io.on('connection', socket => {
   })
 
   socket.on("sendDebugMessage",(id,message) =>{
-    io.emit("debug_message",id,body);
+    io.emit("debug_message",id,message);
     console.log("Message [%s] send to %s.",message,id);
    })
 
