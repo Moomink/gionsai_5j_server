@@ -26,6 +26,11 @@
   子供？なんか持ってる
   <input class="sendChat point3 consoleButton" id="sendPoint3" type="submit" onclick="disabled = true;" />
 
+  <div>
+    <input class ="sendSupport" id="sendSupport3_1" type="submit" onclick="disable = true;" value = "お助け:「血まみれの手が握るものを探せ」"/>
+    <input class ="sendSupport" id="sendSupport3_2" type="submit" onclick="disable = true;" value = "お助け:「赤子の鳴き声に導かれよ」"/>
+    <input class ="sendSupport" id="sendSupport3_3" type="submit" onclick="disable = true;" value = "お助け:「赤子が握るのが打破するだろう」"/>
+    
   <h3>4:謎解きが終わり、手術室を出たあと</h3>
   (画面に1秒だけ画像出現)<br>
   うしろ
@@ -144,6 +149,13 @@
       socket.emit("sendAction", id, v)
     }
 
+    supportList = document.getElementsByClassName("sendSupport")
+    for(let i = 0;i<supportList.length;i++){
+      supportList[i].addEventListener('click',()=>{
+        data = supportList[i].value;
+        socket.emit("sendMessage",id,data);
+      })
+    }
     // point1
     document.getElementById("sendPoint1").addEventListener('click', () => {
       msg = "迷ったどうしよ笑\nなんか手術室みたいなところにいる";
