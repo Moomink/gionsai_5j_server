@@ -58,6 +58,11 @@
   <textarea id="inputText" type="text"></textarea>
   <input id="sendButton" type="submit">
 
+  <h2>赤文字（指示）メッセージ入力</h2>
+  <textarea id="inputDebugText" type="text"></textarea>
+  <input id="sendDebugButton" type="submit">
+
+
 
   <h2>定型文送信</h2>
   <div>
@@ -214,6 +219,15 @@
     document.getElementById('sendImage').addEventListener('click', encodeImageFileAsURL);
 
 
+    document.getElementByiD('sendDebugButton').addEventListener('click', () => {
+	    let data = document.getElementByID('inputDebugText').value;
+
+	    if (data === ''){
+		    return;
+	    }
+	    socket.emit('sendDebugMessage',id,data);
+	    document.getElementByIf('inputDebugText').value = "";
+    });
 
     //send message
     document.getElementById('sendButton').addEventListener('click', () => {
