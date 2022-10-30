@@ -38,14 +38,14 @@ io.on('connection', socket => {
     console.log("template [%s] send to %s.", body, id);
   })
 
-  socket.on("sendAction",(id,body)=>{
-    io.emit("action",body);
-    console.log("Action [%s] send.",body);
+  socket.on("sendAction",(id,body,data)=>{
+    io.emit("action",body,data);
+    console.log("Action [%s][%s] send.",body,data);
   })
 
   socket.on("sendDebugMessage",(id,message) =>{
-    io.emit("debug_message",id,message);
-    console.log("Message [%s] send to %s.",message,id);
+    io.emit("debug_message",message);
+    console.log("Debug Message [%s] send.",message);
    })
 
   socket.on("sendMessage", (id, message) => {

@@ -12,34 +12,35 @@
 
   <h2> 一般用</h2>
   <h3>1:お化け屋敷に入る前</h3>
-  迷ったどうしよ笑<br>
-  なんか手術室みたいなところにいる
+  <font id="point1Message">迷ったどうしよ笑<br>なんか手術室みたいなところにいる</font>
   <input class="sendChat point1 consoleButton" id="sendPoint1" type="submit" onclick="disabled = true;" />
 
   <h3>2:お化け屋敷に入った直後</h3>
-  ドア開かない<br>
-  待って閉じ込められた
+  <font id="point2Message">ドア開かない<br>待って閉じ込められた</font>
   <input class="sendChat point2 consoleButton" id="sendPoint2" type="submit" onclick="disabled = true;" />
 
   <h3>3:手術室に入る前</h3>
-  誰かいる？<br>
-  子供？なんか持ってる
+  <font id="point3Message">誰かいる？<br>子供？なんか持ってる</font>
   <input class="sendChat point3 consoleButton" id="sendPoint3" type="submit" onclick="disabled = true;" />
 
+  <h3>ヘルプメッセージ</h3>
   <div>
-    <input class ="sendSupport" id="sendSupport3_1" type="submit" onclick="disable = true;" value = "血まみれの手が握る物を鳴らし続けろ"/>
-    <input class ="sendSupport" id="sendSupport3_2" type="submit" onclick="disable = true;" value = "赤子の鳴き声に導かれよ"/>
-    <input class ="sendSupport" id="sendSupport3_3" type="submit" onclick="disable = true;" value = "赤子が握る物が打破するだろう"/>
+    <input class="sendSupport" id="sendSupport3_1" type="submit" value="血まみれの手が握る物を鳴らし続けろ" />
+    <input class="sendSupport" id="sendSupport3_2" type="submit" value="赤子の鳴き声に導かれよ" />
+    <input class="sendSupport" id="sendSupport3_3" type="submit" value="赤子が握る物が打破するだろう" />
+    <input class="sendSupport" id="sendSupport3_4" type="submit" value="血まみれの手が握る物を鳴らし続けろ" />
+  </div>
+
 
   <h3>4:謎解きが終わり、手術室を出たあと</h3>
-  (画面に1秒だけ画像出現)<br>
-  うしろ
+  (画面に1秒だけ画像出現)
+  <font id="point4Message">うしろ</font>
   <input class="sendChat point4 consoleButton" id="sendPoint4" type="submit" onclick="disabled = true;" />
 
   <h3>5:お化け屋敷から脱出したあと</h3>
-  たすけて<br>
-  (2秒後)どうしておいてくの<br>
-  (1秒おき5回)たすけて
+  <font id="point5_1Message">たすけて</font><br>
+  (2秒後)<font id="point5_2Message">どうしておいてくの</font><br>
+  (1秒おき5回)<font id="point5_3Message">たすけて</font>
   <input class="sendChat point5 consoleButton" id="sendPoint5" type="submit" onclick="disabled = true;" />
 
   <h3>その他機能</h3>
@@ -91,6 +92,7 @@
 
 
   <script>
+    const vibraTime = 3000; //milliseconds
     const socket = io();
 
     //現状は未使用
@@ -139,70 +141,79 @@
 
     //  document.getElementById("kiosk").addEventListener('click', () => {socket.emit("sendAction", id,"kiosk")});
 
+    // tag_action
     actionList = document.getElementsByClassName("sendAction")
     for (let i = 0; i < actionList.length; i++) {
       actionList[i].addEventListener('click', sendAction);
     }
 
-    function sendAction(element) {
+    function sendAction(element,data) {
       v = element.srcElement.id
-      socket.emit("sendAction", id, v)
+      socket.emit("sendAction", id, v,data);
     }
 
+    // tag_support
+    document.getElementById("sendDebugButton").addEventListener('click', () =>{
+      d = document.getElementById("inputDebugText");
+      socket.emit("sendDebugMessage",id,d.value);
+      d.value = "";
+    });
+
     supportList = document.getElementsByClassName("sendSupport")
-    for(let i = 0;i<supportList.length;i++){
-      supportList[i].addEventListener('click',()=>{
+    for (let i = 0; i < supportList.length; i++) {
+      supportList[i].addEventListener('click', () => {
         data = supportList[i].value;
-        socket.emit("sendMessage",id,data);
+        socket.emit("sendDebugMessage", id, data);
       })
     }
+
+    //tag_point
     // point1
     document.getElementById("sendPoint1").addEventListener('click', () => {
-      msg = "迷ったどうしよ笑\nなんか手術室みたいなところにいる";
+      msg = document.getElementById("point1Message").innerText;
       socket.emit("sendMessage", id, msg);
     });
 
     // point2
     document.getElementById("sendPoint2").addEventListener('click', () => {
-      msg = "ドア開かない\n待って閉じ込められた";
+      msg = document.getElementById("point2Message").innerText;
       socket.emit("sendMessage", id, msg);
     });
 
     // point3
     document.getElementById("sendPoint3").addEventListener('click', () => {
-      msg = "誰かいる？\n子供？なんか持ってる";
+      msg = document.getElementById("point3Message").innerText;
       socket.emit("sendMessage", id, msg);
     });
 
     // point4
     document.getElementById("sendPoint4").addEventListener('click', () => {
-
-      socket.emit("sendAction", id, "surprise");
-      sleep(4, () => {
-        msg = "うしろ";
+      socket.emit("sendAction", id, "surprise",vibraTime);
+      msgTime = Math.ceil((vibraTime+2000)/1000);
+      sleep(msgTime, () => {
+        msg = document.getElementById("point4Message").innerText;
         socket.emit("sendMessage", id, msg);
       });
     });
 
-    // point3
+    // point5
     document.getElementById("sendPoint5").addEventListener('click', () => {
-      msg = "たすけてよ";
+      msg = document.getElementById("point5_1Message").innerText;
       socket.emit("sendMessage", id, msg);
 
       sleep(2, () => {
-        msg = "どうしておいてくの";
+        msg = document.getElementById("point5_2Message").innerText;
         socket.emit("sendMessage", id, msg);
 
         for (let i = 0; i < 5; i++) {
           sleep(i, () => {
-            msg = "たすけて";
+            msg = document.getElementById("point5_3Message").innerText;
             socket.emit("sendMessage", id, msg);
           })
         }
       });
 
     });
-
 
     //send Template
     sendTemplateList = document.getElementsByClassName("sendTemplate");
@@ -232,13 +243,13 @@
 
 
     document.getElementById('sendDebugButton').addEventListener('click', () => {
-	    let data = document.getElementById('inputDebugText').value;
+      let data = document.getElementById('inputDebugText').value;
 
-	    if (data === ''){
-		    return;
-	    }
-	    socket.emit('sendDebugMessage',id,data);
-	    document.getElementById('inputDebugText').value = "";
+      if (data === '') {
+        return;
+      }
+      socket.emit('sendDebugMessage', id, data);
+      document.getElementById('inputDebugText').value = "";
     });
 
     //send message
